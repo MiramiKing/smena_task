@@ -1,0 +1,31 @@
+- model: checks.printer
+  pk: 1
+  fields:
+    name: Chernyaga Printer
+    api_key: 123
+    check_type: kitchen
+    point_id : 1
+
+- model: checks.printer
+  pk: 2
+  fields:
+    name: Chernyaga Printer
+    api_key: 456
+    check_type: client
+    point_id: 1
+
+- model: checks.printer
+  pk: 3
+  fields:
+    name: Central Printer
+    api_key: 789
+    check_type: kitchen
+    point_id : 2
+
+- model: checks.printer
+  pk: 4
+  fields:
+    name: Central Printer
+    api_key: 012
+    check_type: client
+    point_id: 2

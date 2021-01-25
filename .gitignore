@@ -1,0 +1,3 @@
+# Project exclude paths
+/backend/env/
+/backend/assigment/checks/migrations/

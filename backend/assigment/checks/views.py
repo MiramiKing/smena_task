@@ -25,7 +25,6 @@ def new_checks(request):
 
 
 def create_checks(request):
-    body = request.body
     data_dict = json.loads(request.body)
     point_id = int(data_dict['point_id'])
     printers = Printer.objects.filter(point_id=point_id)

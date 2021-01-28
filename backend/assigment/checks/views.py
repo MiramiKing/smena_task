@@ -65,7 +65,8 @@ def check(request):
             "error": "Не существует принтера с таким api_key"
         }, status=401)
 
-    check = Check.objects.get(pk=check_id)
+    check = Check.objects.filter(pk=check_id).first()
+
     if not check:
         return JsonResponse({
             "error": "Данного чека не существует"

@@ -24,7 +24,7 @@ def generator(num):
     with open(check_html_filename, 'w') as file:
         file.write(content)
 
-    url = 'http://0.0.0.0:80/'
+    url = 'http://127.0.0.1:80/'
     data = {
         'contents': base64.b64encode(open(check_html_filename, 'rb').read()).decode('ascii'),
     }

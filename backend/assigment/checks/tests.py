@@ -48,10 +48,14 @@ def empty_rq_queue():
 class NewCheckTest(TestCase):
 
     @classmethod
-    def setUpTestData(cls):
+    def setUp(cls):
         create_printers_one_point()
 
     def test_new_checks_wrong_api_key(self):
+        """
+        Если передаётся неверный API ключ, ожидается ошибка 401
+        """
+
         response = self.client.get(reverse('checks:new_checks'), {'api_key': 'nope'})
 
         self.assertEqual(response.status_code, 401)
@@ -61,6 +65,10 @@ class NewCheckTest(TestCase):
         )
 
     def test_new_checks_empty_result(self):
+        """
+        Если передается правильный API ключ и не было вызова create_checks, ожидается код 200 и пустой результат
+        """
+
         response = self.client.get(reverse('checks:new_checks'), {'api_key': '1'})
 
         self.assertEqual(response.status_code, 200)
@@ -70,6 +78,10 @@ class NewCheckTest(TestCase):
         )
 
     def test_new_checks_after_create_checks(self):
+        """
+        Если передается правильный API ключ и не было вызова create_checks, ожидается код 200 и непустой результат
+        """
+
         queue = django_rq.get_queue('default')
         queue.empty()
 
@@ -90,10 +102,14 @@ class NewCheckTest(TestCase):
 class CheckTests(TestCase):
 
     @classmethod
-    def setUpTestData(cls):
+    def setUp(cls):
         create_printers_one_point()
 
     def test_new_checks_wrong_api_key(self):
+        """
+        Если передан неверный API ключ, ожидается код 401
+        """
+
         response = self.client.get(reverse('checks:check'), {'api_key': 'no_such_key', 'check_id': 1})
 
         self.assertEqual(response.status_code, 401)
@@ -103,6 +119,10 @@ class CheckTests(TestCase):
         )
 
     def test_new_check_without_existing_check(self):
+        """
+        Если передан верный API ключ и check_id, которого нет, код 400 ошибка
+        """
+
         response = self.client.get(reverse('checks:check'), {'api_key': '1', 'check_id': 1})
 
         self.assertEqual(response.status_code, 400)
@@ -112,6 +132,10 @@ class CheckTests(TestCase):
         )
 
     def test_check_status_new(self):
+        """
+        Если передан верный API ключ и check_id, для которого ешё не сгенерировался PDF файл, ожидается 400 код
+        """
+
         empty_rq_queue()
         self.client.post(reverse('checks:create_checks'), data=get_example_check_data(),
                          content_type='application/json')
@@ -126,6 +150,11 @@ class CheckTests(TestCase):
         )
 
     def test_check_status_rendered(self):
+        """
+        Если передан верный API ключ и check_id, для которого сгенерировался PDF файл, ожидается 200 код
+        и application/pdf
+        """
+
         empty_rq_queue()
         self.client.post(reverse('checks:create_checks'), data=get_example_check_data(),
                          content_type='application/json')
@@ -135,7 +164,6 @@ class CheckTests(TestCase):
         response = self.client.get(reverse('checks:check'),
                                    {'api_key': '1', 'check_id': Check.objects.last().pk})
 
-        # Assert
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['content-type'], 'application/pdf')
 
@@ -143,6 +171,10 @@ class CheckTests(TestCase):
 class CreateChecksTests(TestCase):
 
     def test_create_checks_no_printers_for_point(self):
+        """
+        Если создаются чеки для точки без принтеров, ожидается код 400
+        """
+
         create_printers_one_point(point_id=2)
 
         create_checks_response = self.client.post(reverse('checks:create_checks'), data=get_example_check_data(),
@@ -155,6 +187,10 @@ class CreateChecksTests(TestCase):
         )
 
     def test_create_checks_two_times(self):
+        """
+        Если создаются чеки для заказа, для которого уже созданы чеки, ожидается код 400
+        """
+
         create_printers_one_point(point_id=1)
 
         self.client.post(reverse('checks:create_checks'), data=get_example_check_data(),
@@ -169,6 +205,10 @@ class CreateChecksTests(TestCase):
         )
 
     def test_create_checks_already_created(self):
+        """
+        Если создаются чеки для заказа и у точки есть принтеры, ожидается код 200
+        """
+
         create_printers_one_point(point_id=1)
 
         create_checks_response = self.client.post(reverse('checks:create_checks'), data=get_example_check_data(),
@@ -180,5 +220,3 @@ class CreateChecksTests(TestCase):
             str(create_checks_response.content, encoding='utf8'),
             {"ok": "Чеки успешно созданы"}
         )
-
-

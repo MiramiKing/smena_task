@@ -61,7 +61,7 @@ ROOT_URLCONF = 'assigment.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'checks', 'templates', 'checks')],
+        'DIRS': [os.path.join(BASE_DIR, 'checks/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

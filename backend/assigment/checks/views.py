@@ -3,12 +3,13 @@ from .models import Check, Printer
 import json
 import django_rq
 from . import tasks
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.http import require_GET, require_POST
 
 
 # Create your views here.
 
-@ensure_csrf_cookie
+
+@require_GET
 def new_checks(request):
     api_key = request.GET['api_key']
     printers = Printer.objects.filter(api_key=api_key)
@@ -27,6 +28,7 @@ def new_checks(request):
     return JsonResponse(result)
 
 
+@require_POST
 def create_checks(request):
     data_dict = json.loads(request.body)
     point_id = int(data_dict['point_id'])
@@ -55,6 +57,7 @@ def create_checks(request):
         return JsonResponse({"ok": "Чеки успешно созданы"})
 
 
+@require_GET
 def check(request):
     api_key = request.GET['api_key']
     check_id = request.GET['check_id']

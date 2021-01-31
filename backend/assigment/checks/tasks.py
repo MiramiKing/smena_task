@@ -1,6 +1,7 @@
 from .models import Check
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.apps import apps
 import json
 import requests
 import os
@@ -9,11 +10,12 @@ import base64
 
 def generator(num):
     check = Check.objects.get(id=num)
-    
+
     check_template = check.type + '_check.html'
-    check_html_filename = str(settings.BASE_DIR) + '/checks/' + 'templates/' + str(
+    check_html_filename = apps.get_app_config('checks').path + '/templates/' + str(
         check.order['id']) + '_' + check.type + '.html'
 
+    print(check_html_filename)
     context = check.order
     content = render_to_string(check_template, context)
 

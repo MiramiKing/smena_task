@@ -1,13 +1,15 @@
 # Тестовое задание на позицию backend разработчика
 
-Как запустить:
-1. docker-compose up
-2. cd backend
-3. python3 -m venv env
-4. source env/bin/activate
-5. pip install -r requirements.txt
-6. cd assignment
-7. python manage.py migrate
-8. python manage.py loaddata checks/fixtures/initial.yaml
-9. python manage.py runserver
-10. python manage.py rqworker
+Как развернуть:
+1. Для докера `docker-compose up`
+2. Для создания окружения введите поселдовательно:<br/>
+`cd backend`<br/>
+`python3 -m venv env`<br/> 
+`source env/bin/activate`<br/> 
+`pip install -r requirements.txt`
+3. `cd assignment`
+4. Для django проведите миграции `python manage.py migrate`
+5. Если необходимо, заполните БД начальными данными `python manage.py loaddata checks/fixtures/initial.yaml`
+6. Запустите сервер `python manage.py runserver`
+7. Запустите очередь задач `python manage.py rqworker`
+8. Для доступа к панели администратора создайте пользователя `python manage.py createsuperuser`

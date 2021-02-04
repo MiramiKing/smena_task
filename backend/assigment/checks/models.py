@@ -21,7 +21,7 @@ class Check(models.Model):
     type = models.CharField(max_length=100, choices=PRINTER_CHOICES)
     order = models.JSONField()
     status = models.CharField(max_length=100, choices=CHECK_CHOICES)
-    pdf_file = models.FileField(upload_to='media/pdf/')
+    pdf_file = models.FileField(upload_to='pdf/')
 
     class Meta:
         verbose_name = 'Чек'

@@ -19,6 +19,9 @@ def generator(num):
     context = check.order
     content = render_to_string(check_template, context)
 
+    if not os.path.exists(str(settings.MEDIA_ROOT) + '/pdf/'):
+        os.makedirs(str(settings.MEDIA_ROOT) + '/pdf/')
+
     pdf_filename = str(settings.MEDIA_ROOT) + '/pdf/' + str(check.order['id']) + '_' + check.type + '.pdf'
 
     with open(check_html_filename, 'w') as file:
